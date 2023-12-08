@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+
+  wh-bot:
+    container_name: wh-bot
+    build: .
+    networks:
+      - wh-bot
+    environment:
+      TZ: Europe/Moscow
+    volumes:
+      - ./screens:/app/screens
+      - ./temp:/app/temp
+      - ./profiles:/app/profiles
+      - ./config.prod.toml:/app/config.prod.toml
+      - ./service_account.json:/app/service_account.json
+    restart: "no"
+
+networks:
+  wh-bot:

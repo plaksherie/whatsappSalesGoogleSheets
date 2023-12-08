@@ -1,0 +1,22 @@
+[selenium]
+path_profiles = 'profiles'
+profile_name = 'zd'
+user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3641.0 Safari/537.36'
+browser_version = 120
+timeout_get_messages = 5.0
+timeout_loading_first_messages = 2.0
+headless = true
+
+
+[whatsapp]
+chat_name = 'test'
+
+
+[google_sheets]
+config_url_sheet = 'https://docs.google.com/spreadsheets/d/111111111111111/edit?hl=ru#gid=0'
+config_worksheet_name = 'СписокW'
+
+
+[google_drive]
+# https://drive.google.com/drive/folders/22222222222222222222
+folder_id_uploads = '22222222222222222222'

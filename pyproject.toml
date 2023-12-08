@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "whatsappsalesgooglesheets"
+version = "0.1.0"
+description = ""
+authors = ["PLAKSHERiE <67220210+PLAKSHERiE@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+webdriver-manager = "^4.0.1"
+selenium = "^4.16.0"
+pydantic = "^2.5.2"
+pyperclip = "^1.8.2"
+gspread = "^5.12.2"
+pydrive2 = "^1.18.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.mypy]
+plugins = ["pydantic.mypy"]
