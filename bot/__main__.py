@@ -57,9 +57,9 @@ def main():
                     file_path=file_path,
                     file_name=id_,
                 )
-                os.remove(file_path)
-                if not upload_file:
+                if not upload_file or not upload_file.uploaded:
                     continue
+                os.remove(file_path)
                 link_file = upload_file['alternateLink']
                 sheet_sales = SheetSales(
                     url_sheet=exist_config.link_sales_sheet,

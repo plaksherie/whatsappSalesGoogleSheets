@@ -29,15 +29,15 @@ class GoogleDriveUpload:
             file_name: str,
             mime_type: str = 'image/jpeg'
     ) -> GoogleDriveFile | None:
+        metadata = {
+            'parents': [
+                {"id": folder_id}
+            ],
+            'title': file_name,
+            'mimeType': mime_type
+        }
+        file = self.drive.CreateFile(metadata=metadata)
         try:
-            metadata = {
-                'parents': [
-                    {"id": folder_id}
-                ],
-                'title': file_name,
-                'mimeType': mime_type
-            }
-            file = self.drive.CreateFile(metadata=metadata)
             file.SetContentFile(file_path)
             file.Upload()
             logging.info(f'Загружен файл {file["title"]} - {file["mimeType"]}')
@@ -46,3 +46,6 @@ class GoogleDriveUpload:
             logging.error('Ошибка при загрузке файла в Google Drive')
             traceback.print_exc()
             return None
+        finally:
+            file.content.close()
+

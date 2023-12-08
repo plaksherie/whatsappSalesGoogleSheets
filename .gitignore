@@ -167,5 +167,5 @@ service_account.json
 screens/**/*
 !screens/**/.gitkeep
 temp/**/*
-!temp/**/.gitkeep
+#!temp/**/.gitkeep
 profiles.zip
