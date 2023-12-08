@@ -1,5 +1,6 @@
 # Whatsapp uploader images to Google Drive and Google Sheets
 
+Ссылка на скачивание - https://github.com/plaksherie/whatsappSalesGoogleSheets/archive/refs/heads/master.zip
 
 ### Запуск
 ```sh
