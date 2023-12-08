@@ -11,7 +11,7 @@ from bot.loader import get_driver, checked_message_ids
 from bot.whatsapp.whatsapp import Whatsapp
 
 
-def main():
+def start_bot():
     driver = get_driver()
     wh = Whatsapp(driver)
     try:
@@ -37,6 +37,7 @@ def main():
                 short_phrase, id_ = wh.get_short_phrase_and_id(message.text)
                 if not short_phrase or not id_:
                     continue
+                logging.info(f'Сообщение с хештегом {short_phrase}')
                 configs = sheet_config.get_whatsapp_configs()
                 exist_config = None
                 for config in configs:
@@ -48,10 +49,12 @@ def main():
                         or exist_config.column_for_link_file == ''
                         or exist_config.column_order_number == ''):
                     continue
+                logging.info(f'Сообщение подходит под правило')
                 file_path = f'./temp/{id_}.jpg'
                 downloaded = wh.download_file_blob(file_path=file_path, quote=message.quote)
                 if not downloaded:
                     continue
+                logging.info(f'Скачано изображение {file_path}')
                 upload_file = drive_upload.upload_file(
                     folder_id=settings.google_drive.folder_id_uploads,
                     file_path=file_path,
@@ -76,9 +79,18 @@ def main():
         logging.error('Ошибка')
         traceback.print_exc()
     finally:
-        driver.quit()
         driver.close()
-        input()
+        driver.quit()
+
+
+def main():
+    while True:
+        try:
+            start_bot()
+        except (Exception,):
+            ...
+        finally:
+            logging.error('Перезапуск...')
 
 
 if __name__ == '__main__':
