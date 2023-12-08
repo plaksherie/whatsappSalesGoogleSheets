@@ -12,6 +12,7 @@ from bot.whatsapp.whatsapp import Whatsapp
 
 
 def start_bot():
+    global checked_message_ids
     temp_path = f'./temp'
     driver = get_driver()
     wh = Whatsapp(driver)
@@ -26,6 +27,7 @@ def start_bot():
         driver.save_screenshot('screens/enter_chat.png')
         messages = wh.get_new_messages(only_quote=False)
         checked_message_ids.extend([message.id for message in messages])
+        checked_message_ids = list(set(checked_message_ids))
         logging.info('Прослушиваю новые сообщения')
         sheet_config = SheetConfig(
             url_sheet=settings.google_sheets.config_url_sheet,
