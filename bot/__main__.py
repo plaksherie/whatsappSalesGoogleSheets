@@ -12,6 +12,7 @@ from bot.whatsapp.whatsapp import Whatsapp
 
 
 def start_bot():
+    temp_path = f'./temp'
     driver = get_driver()
     wh = Whatsapp(driver)
     try:
@@ -50,19 +51,19 @@ def start_bot():
                         or exist_config.column_order_number == ''):
                     continue
                 logging.info(f'Сообщение подходит под правило')
-                file_path = f'./temp/{id_}.jpg'
-                downloaded = wh.download_file_blob(file_path=file_path, quote=message.quote)
-                if not downloaded:
+                downloaded_path, mime_type = wh.download_file_blob(folder_path=temp_path, name=id_, quote=message.quote)
+                if not downloaded_path:
                     continue
-                logging.info(f'Скачано изображение {file_path}')
+                logging.info(f'Скачан файл {downloaded_path}')
                 upload_file = drive_upload.upload_file(
                     folder_id=settings.google_drive.folder_id_uploads,
-                    file_path=file_path,
-                    file_name=id_,
+                    file_path=downloaded_path,
+                    file_name=f'{exist_config.short_phrase}_{id_}',
+                    mime_type=mime_type,
                 )
                 if not upload_file or not upload_file.uploaded:
                     continue
-                os.remove(file_path)
+                os.remove(downloaded_path)
                 link_file = upload_file['alternateLink']
                 sheet_sales = SheetSales(
                     url_sheet=exist_config.link_sales_sheet,

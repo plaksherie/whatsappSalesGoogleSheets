@@ -3,9 +3,9 @@ import logging
 import re
 import time
 import traceback
+from mimetypes import guess_extension
 from typing import List, Union
 
-import pyperclip
 from selenium import webdriver
 from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver import ActionChains, Keys
@@ -155,9 +155,10 @@ class Whatsapp:
 
     def download_file_blob(
             self,
-            file_path: str,
+            folder_path: str,
+            name: str,
             quote: WebElement
-    ) -> bool:
+    ) -> tuple[str | bool, str | bool]:
         try:
             url = self.get_url_image_in_quote(quote)
             blob_data = self.driver.execute_script("return (async () => { \
@@ -170,15 +171,21 @@ class Whatsapp:
                     reader.readAsDataURL(blob); \
                 }); \
             })(arguments[0]);", f'blob:{url}')
-            ext, binary_data = blob_data.split(",")
+            mime_type, binary_data = blob_data.split(",")
+            mime_type = mime_type.replace('data:', '').replace(';base64', '')
+            possible_extensions = ["image/jpeg"]
+            if mime_type not in possible_extensions:
+                return False, False
+            ext = guess_extension(mime_type)
             binary_data = binary_data.encode("utf-8")
+            file_path = f'{folder_path}/{name}{ext}'
             with open(file_path, "wb") as file:
                 file.write(base64.b64decode(binary_data, validate=True))
-            return True
+            return file_path, mime_type
         except (Exception,):
             logging.error('Ошибка в скачивании файла')
             traceback.print_exc()
-            return False
+            return False, False
 
     @staticmethod
     def get_short_phrase_and_id(text: str) -> tuple[str | None, str | None]:

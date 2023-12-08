@@ -22,18 +22,40 @@ class GoogleDriveUpload:
         self.gauth = gauth
         self.drive = GoogleDrive(gauth)
 
+    def get_last_prefix_file_name(
+            self,
+            folder_id: str,
+            file_name: str
+    ) -> str:
+        prefix = ''
+        metadata = {
+            'q': f"'{folder_id}' in parents and trashed=false",
+        }
+        last_index = 1
+        for file in self.drive.ListFile(metadata).GetList():
+            title = file['title']
+            if file_name not in title:
+                continue
+            title_split = title.split('-')
+            if title_split[0] == file_name:
+                last_index += 1
+
+        if last_index != 1:
+            prefix = f'-{last_index}'
+        return prefix
+
     def upload_file(
             self,
             folder_id: str,
             file_path: str,
             file_name: str,
-            mime_type: str = 'image/jpeg'
+            mime_type: str,
     ) -> GoogleDriveFile | None:
         metadata = {
             'parents': [
                 {"id": folder_id}
             ],
-            'title': file_name,
+            'title': f'{file_name}{self.get_last_prefix_file_name(folder_id=folder_id, file_name=file_name)}',
             'mimeType': mime_type
         }
         file = self.drive.CreateFile(metadata=metadata)

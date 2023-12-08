@@ -10,7 +10,6 @@ python = "^3.11"
 webdriver-manager = "^4.0.1"
 selenium = "^4.16.0"
 pydantic = "^2.5.2"
-pyperclip = "^1.8.2"
 gspread = "^5.12.2"
 pydrive2 = "^1.18.0"
 
